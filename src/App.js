@@ -1,12 +1,12 @@
 import React from 'react';
 import Card from './Componennt/Card';
 import useApiWork from './Componennt/useApiWork';
+import DoubleRing from './images/DoubleRing.gif';
+import error123 from './images/error123.png';
 import next3 from './images/next3.png';
 import prev3 from './images/prev3.png';
-
 export default function App() {
   const {articles, loading,error}=useApiWork();
-  console.log(articles)
   const[isMobile,setIsMobile]= React.useState(3)
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const sizes=window.innerWidth;
@@ -14,12 +14,10 @@ export default function App() {
   let touchEndX = 0;
   let n=articles?articles.length:0;
   const handleTouchStart = (e) => {
-      console.log("hello1")
       touchStartX = e.touches[0].clientX; // Get the X position of the first finger
   };
   
   const handleTouchMove = (e) => {
-      console.log("hello2")
       touchEndX = e.touches[0].clientX;
   };
 
@@ -52,7 +50,7 @@ export default function App() {
         setIsMobile(1)
       }
     };
-
+    handleResize()
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -67,16 +65,14 @@ export default function App() {
     setCurrentIndex((currentIndex + 1) % n);  
   };
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='flex items-center w-screen h-screen justify-center'><img src={DoubleRing}/></div>;
   }
 
   if (error || n===0) {
-    return <div>Error: {error?error.message:"404 Articles not found"}</div>;
+    return <div className='flex justify-center bg-base'> <img className="h-screen w-128 p-2" src={error123}/> </div>;
   }
-  articles.filter((item=> item.content))
-  console.log("next:   " + articles)
+  articles.filter((item => item.content))
   return (
-    
     <div className='bg-base h-screen'>
     <h1 className="text-4xl text-center font-bold line-clamp-2 text-base2 py-5"><u/>NewsForAll<u/></h1>
     <div 
@@ -86,10 +82,11 @@ export default function App() {
       onTouchEnd={handleTouchEnd}
     >
       
-    {currentIndex>0 && (<button className="text-white " onClick={leftHandle} > <img src={prev3}/> </button>)}
+    {currentIndex>0 && (<button className="text-white " onClick={leftHandle} > <img className="w-8 h-8 sm:w-16 sm:h-16" src={prev3}/> </button>)}
     {articles.slice(currentIndex,currentIndex+isMobile).map((item,idx) => {
           return (
             <div className='min-w-max h-128' key={idx}>
+            {console.log(item)}
               <Card 
                 title={item.title} 
                 date={item.publishedAt.slice(0,10)} 
@@ -104,7 +101,7 @@ export default function App() {
             </div>
         )})
     }
-    {currentIndex + isMobile<n && (<button className="text-white" onClick={rightHandle} > <img src={next3}/> </button>)}
+    {currentIndex + isMobile<n && (<button className="text-white" onClick={rightHandle} > <img className="w-8 h-8 sm:w-16 sm:h-16" src={next3}/> </button>)}
     </div>
     </div>  
   )
