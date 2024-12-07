@@ -8,7 +8,7 @@ const useApiWork=()=> {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await axios.get('http://localhost:8000/fetch-data');
+                const response = await axios.get('https://news-be-dnxy.onrender.com/fetch-data');
                 setArticles(response.data.articles.filter(item=> item.content && item.author));
             } catch (err) {
                 setError("Error fetching data: " + err.message);
