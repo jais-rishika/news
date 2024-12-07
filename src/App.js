@@ -1,21 +1,23 @@
 import React from 'react';
-import articles from './Api/data';
 import Card from './Componennt/Card';
+import useApiWork from './Componennt/useApiWork';
 import next3 from './images/next3.png';
 import prev3 from './images/prev3.png';
 
 export default function App() {
+  const {articles, loading,error}=useApiWork();
+  console.log(articles)
   const[isMobile,setIsMobile]= React.useState(3)
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const sizes=window.innerWidth;
   let touchStartX = 0;
   let touchEndX = 0;
-  let n=articles.length;
+  let n=articles?articles.length:0;
   const handleTouchStart = (e) => {
       console.log("hello1")
       touchStartX = e.touches[0].clientX; // Get the X position of the first finger
   };
-
+  
   const handleTouchMove = (e) => {
       console.log("hello2")
       touchEndX = e.touches[0].clientX;
@@ -64,7 +66,15 @@ export default function App() {
   const rightHandle = () => {
     setCurrentIndex((currentIndex + 1) % n);  
   };
-  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error || n===0) {
+    return <div>Error: {error?error.message:"404 Articles not found"}</div>;
+  }
+  articles.filter((item=> item.content))
+  console.log("next:   " + articles)
   return (
     
     <div className='bg-base h-screen'>
@@ -79,18 +89,19 @@ export default function App() {
     {currentIndex>0 && (<button className="text-white " onClick={leftHandle} > <img src={prev3}/> </button>)}
     {articles.slice(currentIndex,currentIndex+isMobile).map((item,idx) => {
           return (
-              <div className='min-w-max h-128' key={idx}>
-                <Card 
-                  title={item.title} 
-                  date={item.publishedAt.slice(0,10)} 
-                  time={item.publishedAt.slice(12,16)}
-                  url={item.url} 
-                  image={item.urlToImage} 
-                  content={item.content}
-                  source={item.source.name}
-                  author={item.author}
-                />
-              </div>
+            <div className='min-w-max h-128' key={idx}>
+              <Card 
+                title={item.title} 
+                date={item.publishedAt.slice(0,10)} 
+                time={item.publishedAt.slice(12,16)}
+                url={item.url} 
+                image={item.urlToImage} 
+                description={item.description}
+                content={item.content}
+                source={item.source.name}
+                author={item.author}
+              />
+            </div>
         )})
     }
     {currentIndex + isMobile<n && (<button className="text-white" onClick={rightHandle} > <img src={next3}/> </button>)}
@@ -98,33 +109,3 @@ export default function App() {
     </div>  
   )
 }
-             {/* isMobile>1?(
-        articles.slice(currentIndex,currentIndex+isMobile).map((item,idx) => {
-          return (
-              <div className='min-w-max h-128' key={idx}>
-                <Card 
-                  title={item.title} 
-                  date={item.publishedAt.slice(0,10)} 
-                  time={item.publishedAt.slice(12,16)}
-                  url={item.url} 
-                  image={item.urlToImage} 
-                  content={item.content}
-                  source={item.source.name}
-                  author={item.author}
-                />
-              </div>
-        )})
-        ):(
-          <div>
-            <Card key={currentIndex} 
-                title={articles[currentIndex].title} 
-                date={articles[currentIndex].publishedAt.slice(0,10)} 
-                time={articles[currentIndex].publishedAt.slice(12,16)}
-                url={articles[currentIndex].url} 
-                image={articles[currentIndex].urlToImage} 
-                content={articles[currentIndex].content}
-                source={articles[currentIndex].source.name}
-                author={articles[currentIndex].author}
-            />
-          </div>
-          ) */}

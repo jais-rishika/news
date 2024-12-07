@@ -60,8 +60,8 @@ export default function Card({ ...data }) {
         className="rounded-md border-2 border-base mx-2 my-4 p-1 h-36 w-60 object-cover shadow-lg text-text1"
         alt={data.title}
       />
-      <p className="rounded-md border-2 border-base p-1 px-2 line-clamp-4 text-text1">
-        {data.content}
+      <p className="rounded-md border-2 border-base p-2 px-2 h-28 w-80 line-clamp-4 overflow-hidden text-text1">
+        {data.content?data.content:data.title}
       </p>
       <button className="rounded-lg bg-base px-2 py-1 mt-2 transition-transform transform hover:scale-105">
         <a href={data.url} target="_blank" rel="noopener noreferrer">

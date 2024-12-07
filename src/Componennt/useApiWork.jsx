@@ -10,7 +10,8 @@ const useApiWork=()=> {
             setLoading(true);
             try {
                 const response = await axios.get('http://localhost:8000/fetch-data');
-                setArticles(response.data.articles);
+                console.log(response.data.sources)
+                setArticles(response.data.sources);                
             } catch (err) {
                 setError("Error fetching data: " + err.message);
             } finally {
@@ -21,6 +22,9 @@ const useApiWork=()=> {
         fetchData();
     }, []);
 
+// This will log the updated articles whenever they change
+
+    
     return { articles, loading, error };
 };
 
