@@ -9,27 +9,28 @@ export default function App() {
   const {articles, loading,error}=useApiWork();
   const[isMobile,setIsMobile]= React.useState(3)
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const sizes=window.innerWidth;
+  
   let touchStartX = 0;
   let touchEndX = 0;
   let n=articles?articles.length:0;
+  
   const handleTouchStart = (e) => {
-      touchStartX = e.touches[0].clientX; // Get the X position of the first finger
+    touchStartX = e.touches[0].clientX; // Get the X position of the first finger
   };
   
   const handleTouchMove = (e) => {
       touchEndX = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-
+    };
+    
+    const handleTouchEnd = () => {
+      
     if (touchStartX - touchEndX > 50) {
       // Swipe Left
       if (currentIndex < articles.length - 1) {
         setCurrentIndex(currentIndex + 1);
       }
     }
-
+    
     if (touchStartX - touchEndX < -50) {
       // Swipe Right
       if (currentIndex > 0) {
@@ -37,6 +38,7 @@ export default function App() {
       }
     }
   };
+
   React.useEffect(() => {
     const handleResize = () => {
       const sizes=window.innerWidth;
@@ -56,14 +58,7 @@ export default function App() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
-  const leftHandle = () => {
-    setCurrentIndex((currentIndex - 1 + n) % n);    
-  };
-
-  const rightHandle = () => {
-    setCurrentIndex((currentIndex + 1) % n);  
-  };
+  
   if (loading) {
     return <div className='flex items-center w-screen h-screen justify-center'><img src={DoubleRing}/></div>;
   }
@@ -71,7 +66,16 @@ export default function App() {
   if (error || n===0) {
     return <div className='flex justify-center bg-base'> <img className="h-screen w-128 p-2" src={error123}/> </div>;
   }
+  const leftHandle = () => {
+    setCurrentIndex((currentIndex - 1 + n)%n);    
+  };
+  
+  const rightHandle = () => {
+    setCurrentIndex((currentIndex + 1)%n);  
+  };
+  
   articles.filter((item => item.content))
+  
   return (
     <div className='bg-base h-screen'>
     <h1 className="text-4xl text-center font-bold line-clamp-2 text-base2 py-5"><u/>NewsForAll<u/></h1>
